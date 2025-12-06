@@ -1,149 +1,183 @@
-﻿using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Utilitarios;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Interface;
 using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Modelos;
+using System.Text;
+using System.Globalization;
+
+
+using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Utilitarios;
 
 namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 {
-    internal class FuncionarioDao : IDao<Funcionario>
+ 
+    public class FuncionarioDao : IDao<Funcionario>
     {
-       
-        public void Create(Funcionario funcionario)
+        private string RemoverAcentos(string texto)
         {
+            if (string.IsNullOrWhiteSpace(texto))
+                return texto;
+
+            var normalizado = texto.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+
+            foreach (char c in normalizado)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        private string ValidarNome(string nomeBruto)
+        {
+            if (string.IsNullOrWhiteSpace(nomeBruto))
+            {
+                throw new ArgumentException("O Nome do funcionário é obrigatório.");
+            }
+
+            string nomeProcessado = nomeBruto.Trim();
+            nomeProcessado = RemoverAcentos(nomeProcessado);
+
+            if (Regex.IsMatch(nomeProcessado, @"\d"))
+            {
+                throw new ArgumentException($"O Nome '{nomeBruto}' não pode conter números.");
+            }
+
+            return nomeProcessado;
+        }
+
+        private string ValidarCPF(string cpfBruto)
+        {
+            if (string.IsNullOrWhiteSpace(cpfBruto))
+            {
+                throw new ArgumentException("O CPF do funcionário é obrigatório.");
+            }
+            string cpfLimpo = Regex.Replace(cpfBruto, @"[^\d]", "");
+            if (cpfLimpo.Length != 11)
+            {
+                throw new ArgumentException($"O CPF '{cpfBruto}' é inválido. Ele deve conter exatamente 11 dígitos numéricos.");
+            }
+            return cpfLimpo;
+        }
+
+        private string ValidarTelefone(string telefoneBruto)
+        {
+            if (string.IsNullOrWhiteSpace(telefoneBruto))
+            {
+                return null;
+            }
+
+            string telLimpo = Regex.Replace(telefoneBruto, @"[^\d]", "");
+
+            if (telLimpo.Length < 10 || telLimpo.Length > 11)
+            {
+                throw new ArgumentException($"O Telefone '{telefoneBruto}' é inválido. Ele deve ter 10 ou 11 dígitos (incluindo DDD).");
+            }
+
+            return telLimpo;
+        }
+
+
+        public void Create(Funcionario funcionario)
+        {
+         
+            funcionario.nomeFuncionario = ValidarNome(funcionario.nomeFuncionario);
+            funcionario.cpfFuncionario = ValidarCPF(funcionario.cpfFuncionario);
+            funcionario.telefoneFuncionario = ValidarTelefone(funcionario.telefoneFuncionario);
+
+            object telefoneDB = funcionario.telefoneFuncionario == null
+                      ? (object)DBNull.Value
+                      : funcionario.telefoneFuncionario;
+
             try
             {
-                
-                string sql = @"INSERT INTO Funcionario (nomeFuncionario, cpfFuncionario, cargoFuncionario, telefoneFuncionario, FK_Endereco_id_endereco) 
-                               VALUES (@NomeFuncionario, @CpfFuncionario, @CargoFuncionario, @TelefoneFuncionario, @FK_Endereco_id_endereco)";
+                
+                string sql = "INSERT INTO FUNCIONARIO (nomeFuncionario, cpfFuncionario, cargoFuncionario, telefoneFuncionario, FK_Endereco_id_endereco) VALUES (@nomeFuncionario, @cpfFuncionario, @cargoFuncionario, @telefoneFuncionario, @ID_endereco)";
 
                 using (var conexao = Conexao.Conectar())
                 using (var cmd = new MySqlCommand(sql, conexao))
                 {
-                    
-                    cmd.Parameters.AddWithValue("@NomeFuncionario", funcionario.nomeFuncionario);
-                    cmd.Parameters.AddWithValue("@CpfFuncionario", funcionario.cpfFuncionario); 
-                    cmd.Parameters.AddWithValue("@CargoFuncionario", funcionario.cargoFuncionario); 
-                    cmd.Parameters.AddWithValue("@TelefoneFuncionario", funcionario.telefoneFuncionario);
+                    cmd.Parameters.AddWithValue("@nomeFuncionario", funcionario.nomeFuncionario);
+                    cmd.Parameters.AddWithValue("@cpfFuncionario", funcionario.cpfFuncionario);
+                    cmd.Parameters.AddWithValue("@cargoFuncionario", funcionario.cargoFuncionario);
 
-                    
-                    cmd.Parameters.AddWithValue("@FK_Endereco_id_endereco", funcionario.ID_endereco);
+                    cmd.Parameters.AddWithValue("@telefoneFuncionario", telefoneDB);
+
+                    cmd.Parameters.AddWithValue("@ID_endereco", funcionario.ID_endereco);
 
                     cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Erro ao criar funcionário: {ex.Message}");
+                if (ex is ArgumentException) { throw; }
+
+                throw new Exception($"Erro ao criar funcionário: {ex.Message}");
             }
         }
 
-        
-        public void Insert(Funcionario funcionario)
+        
+        public void Update(Funcionario funcionario)
         {
-            
-        }
+        
+            funcionario.nomeFuncionario = ValidarNome(funcionario.nomeFuncionario);
+            funcionario.cpfFuncionario = ValidarCPF(funcionario.cpfFuncionario);
+            funcionario.telefoneFuncionario = ValidarTelefone(funcionario.telefoneFuncionario);
 
-       
-        public void Update(Funcionario funcionario)
-        {
+            object telefoneDB = funcionario.telefoneFuncionario == null
+                      ? (object)DBNull.Value
+                      : funcionario.telefoneFuncionario;
+
             try
             {
-                
-                string sql = @"UPDATE Funcionario SET nomeFuncionario = @NomeFuncionario, cpfFuncionario = @CpfFuncionario, cargoFuncionario = @CargoFuncionario, telefoneFuncionario = @TelefoneFuncionario, FK_Endereco_id_endereco = @FK_Endereco_id_endereco where ID_funcionario = @ID_funcionario";
+                
+                string sql = "UPDATE FUNCIONARIO SET nomeFuncionario = @nomeFuncionario, cpfFuncionario = @cpfFuncionario, cargoFuncionario = @cargoFuncionario, telefoneFuncionario = @telefoneFuncionario, FK_Endereco_id_endereco = @ID_endereco WHERE ID_funcionario = @ID_funcionario";
 
                 using (var conexao = Conexao.Conectar())
                 using (var cmd = new MySqlCommand(sql, conexao))
                 {
-                    
-                    cmd.Parameters.AddWithValue("@NomeFuncionario", funcionario.nomeFuncionario);
-                    cmd.Parameters.AddWithValue("@CpfFuncionario", funcionario.cpfFuncionario);
-                    cmd.Parameters.AddWithValue("@CargoFuncionario", funcionario.cargoFuncionario);
-                    cmd.Parameters.AddWithValue("@TelefoneFuncionario", funcionario.telefoneFuncionario);
-                    cmd.Parameters.AddWithValue("@FK_Endereco_id_endereco", funcionario.ID_endereco);
+                    cmd.Parameters.AddWithValue("@nomeFuncionario", funcionario.nomeFuncionario);
+                    cmd.Parameters.AddWithValue("@cpfFuncionario", funcionario.cpfFuncionario);
+                    cmd.Parameters.AddWithValue("@cargoFuncionario", funcionario.cargoFuncionario);
 
+                    cmd.Parameters.AddWithValue("@telefoneFuncionario", telefoneDB);
+
+                    cmd.Parameters.AddWithValue("@ID_endereco", funcionario.ID_endereco);
                     cmd.Parameters.AddWithValue("@ID_funcionario", funcionario.ID_funcionario);
 
-                    var linhas = cmd.ExecuteNonQuery();
-
-                    if (linhas == 0)
+                    if (cmd.ExecuteNonQuery() == 0)
                     {
-                        throw new Exception("Nenhum registro foi atualizado (verifique o ID_funcionario).");
+                        throw new Exception("Nenhum funcionário encontrado para atualização.");
                     }
                 }
             }
             catch (Exception ex)
             {
+                if (ex is ArgumentException) { throw; }
                 throw new Exception($"Erro ao atualizar funcionário: {ex.Message}");
             }
         }
 
-      
-        public void Delete(int id_funcionario)
+     
+        public void Delete(int id)
         {
-            try
-            {
-                string sql = "DELETE FROM Funcionario WHERE ID_funcionario = @ID_funcionario";
-
-                using (var conexao = Conexao.Conectar())
-                using (var cmd = new MySqlCommand(sql, conexao))
-                {
-                    cmd.Parameters.AddWithValue("@ID_funcionario", id_funcionario);
-
-                    var linhasAfetadas = cmd.ExecuteNonQuery();
-
-                    if (linhasAfetadas == 0)
-                    {
-                        throw new Exception("Nenhum registro encontrado com esse ID.");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Erro ao deletar funcionário: {ex.Message}");
-            }
+            throw new NotImplementedException();
         }
 
-       
+        public Funcionario GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Funcionario> GetAll()
         {
-            List<Funcionario> listadeFuncionarios = new List<Funcionario>();
-
-            try
-            {
-               
-                var sql = "SELECT * FROM Funcionario ORDER BY nomeFuncionario";
-
-                using (var conexao = Conexao.Conectar())
-                using (var cmd = new MySqlCommand(sql, conexao))
-                {
-                    var dr = cmd.ExecuteReader();
-                    while (dr.Read())
-                    {
-                        Funcionario f = new Funcionario();
-
-                       
-                        f.ID_funcionario = dr.GetInt32("ID_funcionario");
-                        f.nomeFuncionario = dr.GetString("nomeFuncionario");
-                        f.cpfFuncionario = dr.GetString("cpfFuncionario");
-                        f.cargoFuncionario = dr.GetString("cargoFuncionario");
-                        f.telefoneFuncionario = dr.GetString("telefoneFuncionario");
-                        f.ID_endereco = dr.GetInt32("FK_Endereco_id_endereco");
-
-                        listadeFuncionarios.Add(f);
-                    }
-                }
-                return listadeFuncionarios;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Erro ao listar funcionários: {ex.Message}");
-            }
+            throw new NotImplementedException();
         }
-
     }
-    }
+}

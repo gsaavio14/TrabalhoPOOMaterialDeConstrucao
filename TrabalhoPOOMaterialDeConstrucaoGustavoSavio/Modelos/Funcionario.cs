@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Modelos
 {
-    internal class Funcionario
+    public class Funcionario
     {
 
         public int ID_funcionario { get; set; }
