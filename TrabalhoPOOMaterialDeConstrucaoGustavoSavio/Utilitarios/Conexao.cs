@@ -5,7 +5,7 @@ using MySql.Data.MySqlClient;
 using System;
 
 
-namespace ConexaoBancodeDados.Utilitarios
+namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Utilitarios
 {
     internal class Conexao
     {
