@@ -39,14 +39,15 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("|===========================================================================|");
                 Console.WriteLine("|                                                                           |");
-                Console.WriteLine("|    BEM VINDO AO MENU DE CADASTRO DO MATERIAL DE CONSTRUÇÃO GUSTAVO LTDA   |");
+                Console.WriteLine("|    BEM VINDO AO MENU DE CADASTRO DO MATERIAL DE CONSTRUÇÃO GUSTAVO LTDA    |");
                 Console.WriteLine("|                                                                           |");
                 Console.WriteLine("|===========================================================================|");
                 Console.WriteLine("|                                                                           |");
                 Console.WriteLine("|                      1 - Cadastrar Funcionário                            |");
+                Console.WriteLine("|                      2 - Listar Funcionários                              |");
                 Console.WriteLine("|                      3 - Atualizar Funcionário                            |");
                 Console.WriteLine("|                      4 - Deletar Funcionário                              |");
-                Console.WriteLine("|             2 - Cadastrar Cliente (Ainda não implementado)                |");
+                Console.WriteLine("|                                                                           |");
                 Console.WriteLine("|                          0 - Sair                                         |");
                 Console.WriteLine("|                      Escolha uma opção:                                   |");
                 Console.WriteLine("|                                                                           |");
@@ -62,15 +63,14 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                     case "1":
                         CadastrarFuncionario();
                         break;
+                    case "2":
+                        ListarFuncionarios();
+                        break;
                     case "3":
                         AtualizarFuncionario();
                         break;
                     case "4":
                         DeletarFuncionario();
-                        break;
-                    case "2":
-                        Console.WriteLine("Opção indisponível no momento. Pressione ENTER para continuar.");
-                        Console.ReadLine();
                         break;
                     case "0":
                         Console.WriteLine("Encerrando o sistema...");
@@ -83,6 +83,55 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
             }
         }
 
+  
+        public static void ListarFuncionarios()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("--- LISTA DE FUNCIONÁRIOS CADASTRADOS ---");
+            Console.ResetColor();
+
+            try
+            {
+                
+                List<Funcionario> funcionarios = globalFuncionarioDao.GetAll();
+
+                if (funcionarios.Count == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("\nNão há funcionários cadastrados no banco de dados.");
+                    Console.ResetColor();
+                }
+                else
+                {
+                   
+                    Console.WriteLine("\n------------------------------------------------------------------------------------------------------------------");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine($"| {"ID",-5} | {"Nome Completo",-30} | {"CPF",-15} | {"Cargo",-20} | {"Telefone",-15} | {"ID Endereço",-12} |");
+                    Console.WriteLine("------------------------------------------------------------------------------------------------------------------");
+                    Console.ResetColor();
+
+                
+                    foreach (Funcionario f in funcionarios)
+                    {
+                        Console.WriteLine($"| {f.ID_funcionario,-5} | {f.nomeFuncionario,-30} | {f.cpfFuncionario,-15} | {f.cargoFuncionario,-20} | {f.telefoneFuncionario,-15} | {f.ID_endereco,-12} |");
+                    }
+                    Console.WriteLine("------------------------------------------------------------------------------------------------------------------");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"\nTotal de Funcionários: {funcionarios.Count}");
+                    Console.ResetColor();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nERRO ao listar funcionários: {ex.Message}");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine("\nPressione ENTER para retornar ao Menu.");
+            Console.ReadLine();
+        }
 
         public static void CadastrarFuncionario()
         {
@@ -204,8 +253,6 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
             Console.WriteLine("\nPressione ENTER para retornar ao Menu.");
             Console.ReadLine();
         }
-
-
 
         public static void AtualizarFuncionario()
         {
@@ -351,6 +398,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
             Console.WriteLine("\nPressione ENTER para retornar ao Menu.");
             Console.ReadLine();
         }
+
         public static void DeletarFuncionario()
         {
             Console.Clear();
@@ -362,10 +410,10 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
 
             if (int.TryParse(Console.ReadLine(), out int idFuncionario))
             {
-               
+
                 try
                 {
-                   
+
                     Funcionario f = globalFuncionarioDao.GetById(idFuncionario);
 
                     if (f == null)
