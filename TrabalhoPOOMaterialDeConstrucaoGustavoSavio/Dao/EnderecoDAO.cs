@@ -1,10 +1,10 @@
-﻿using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Utilitarios;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+
+using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Utilitarios;
 using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Interface;
 using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Modelos;
 
@@ -12,9 +12,63 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 {
     internal class EnderecoDao : IDao<Endereco>
     {
+        private string ValidarECorrigirCep(string cepBruto)
+        {
+            if (string.IsNullOrWhiteSpace(cepBruto))
+            {
+                throw new ArgumentException("O campo CEP é obrigatório.");
+            }
+            string cepLimpo = Regex.Replace(cepBruto, @"[^\d]", "");
+            if (cepLimpo.Length != 8)
+            {
+                throw new ArgumentException($"O CEP '{cepBruto}' é inválido. Ele deve conter 8 dígitos numéricos.");
+            }
+            return cepLimpo;
+        }
 
+        private string ValidarEstado(string estadoBruto)
+        {
+            if (string.IsNullOrWhiteSpace(estadoBruto))
+            {
+                throw new ArgumentException("O campo Estado (UF) é obrigatório.");
+            }
+            string estadoLimpo = estadoBruto.Trim().ToUpper();
+            if (estadoLimpo.Length != 2 || !Regex.IsMatch(estadoLimpo, @"^[A-Z]{2}$"))
+            {
+                throw new ArgumentException($"O Estado '{estadoBruto}' é inválido. Ele deve conter exatamente duas letras (Ex: RO).");
+            }
+            return estadoLimpo;
+        }
+
+        private string ValidarCidade(string cidadeBruta)
+        {
+            if (string.IsNullOrWhiteSpace(cidadeBruta))
+            {
+                throw new ArgumentException("O campo Cidade é obrigatório.");
+            }
+
+            string cidadeLimpa = cidadeBruta.Trim();
+
+            if (Regex.IsMatch(cidadeLimpa, @"\d"))
+            {
+                throw new ArgumentException($"O nome da Cidade '{cidadeBruta}' não pode conter números.");
+            }
+
+            return cidadeLimpa;
+        }
+
+        
         public int CreateAndGetId(Endereco endereco)
         {
+           
+            endereco.estado = ValidarEstado(endereco.estado);
+            endereco.cep = ValidarECorrigirCep(endereco.cep);
+            endereco.cidade = ValidarCidade(endereco.cidade); 
+
+            
+            object logradouroDB = string.IsNullOrWhiteSpace(endereco.logradouro) ? (object)DBNull.Value : endereco.logradouro;
+            object referenciaDB = string.IsNullOrWhiteSpace(endereco.referencia) ? (object)DBNull.Value : endereco.referencia;
+
             try
             {
                 string sql = @"INSERT INTO ENDERECO (estado, rua, referencia, numero, bairro, cidade, cep, logradouro) 
@@ -25,12 +79,14 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                 {
                     cmd.Parameters.AddWithValue("@estado", endereco.estado);
                     cmd.Parameters.AddWithValue("@rua", endereco.rua);
-                    cmd.Parameters.AddWithValue("@referencia", endereco.referencia);
                     cmd.Parameters.AddWithValue("@numero", endereco.numero);
                     cmd.Parameters.AddWithValue("@bairro", endereco.bairro);
                     cmd.Parameters.AddWithValue("@cidade", endereco.cidade);
                     cmd.Parameters.AddWithValue("@cep", endereco.cep);
-                    cmd.Parameters.AddWithValue("@logradouro", endereco.logradouro);
+
+                    
+                    cmd.Parameters.AddWithValue("@logradouro", logradouroDB);
+                    cmd.Parameters.AddWithValue("@referencia", referenciaDB);
 
                     cmd.ExecuteNonQuery();
 
@@ -39,18 +95,24 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
             }
             catch (Exception ex)
             {
+                if (ex is ArgumentException) { throw; }
                 throw new Exception($"Erro ao criar endereço e obter ID: {ex.Message}");
             }
         }
 
+        public void Create(Endereco endereco) => CreateAndGetId(endereco);
 
-        public void Create(Endereco endereco)
-        {
-            CreateAndGetId(endereco);
-        }
-
+       
         public void Update(Endereco endereco)
         {
+            
+            endereco.estado = ValidarEstado(endereco.estado);
+            endereco.cep = ValidarECorrigirCep(endereco.cep);
+            endereco.cidade = ValidarCidade(endereco.cidade); 
+
+            object logradouroDB = string.IsNullOrWhiteSpace(endereco.logradouro) ? (object)DBNull.Value : endereco.logradouro;
+            object referenciaDB = string.IsNullOrWhiteSpace(endereco.referencia) ? (object)DBNull.Value : endereco.referencia;
+
             try
             {
                 string sql = @"UPDATE ENDERECO SET estado = @estado, rua = @rua, referencia = @referencia, numero = @numero, 
@@ -62,17 +124,17 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                 {
                     cmd.Parameters.AddWithValue("@estado", endereco.estado);
                     cmd.Parameters.AddWithValue("@rua", endereco.rua);
-                    cmd.Parameters.AddWithValue("@referencia", endereco.referencia);
                     cmd.Parameters.AddWithValue("@numero", endereco.numero);
                     cmd.Parameters.AddWithValue("@bairro", endereco.bairro);
                     cmd.Parameters.AddWithValue("@cidade", endereco.cidade);
                     cmd.Parameters.AddWithValue("@cep", endereco.cep);
-                    cmd.Parameters.AddWithValue("@logradouro", endereco.logradouro);
                     cmd.Parameters.AddWithValue("@ID_endereco", endereco.ID_endereco);
 
-                    var linhasAfetadas = cmd.ExecuteNonQuery();
+                   
+                    cmd.Parameters.AddWithValue("@logradouro", logradouroDB);
+                    cmd.Parameters.AddWithValue("@referencia", referenciaDB);
 
-                    if (linhasAfetadas == 0)
+                    if (cmd.ExecuteNonQuery() == 0)
                     {
                         throw new Exception("Nenhum endereço encontrado para atualização.");
                     }
@@ -80,24 +142,22 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
             }
             catch (Exception ex)
             {
+                if (ex is ArgumentException) { throw; }
                 throw new Exception($"Erro ao atualizar endereço: {ex.Message}");
             }
         }
 
-
+        
         public void Delete(int id)
         {
             try
             {
                 string sql = "DELETE FROM ENDERECO WHERE ID_endereco = @ID_endereco";
-
                 using (var conexao = Conexao.Conectar())
                 using (var cmd = new MySqlCommand(sql, conexao))
                 {
                     cmd.Parameters.AddWithValue("@ID_endereco", id);
-
-                    var linhasAfetadas = cmd.ExecuteNonQuery();
-                    if (linhasAfetadas == 0)
+                    if (cmd.ExecuteNonQuery() == 0)
                     {
                         throw new Exception("Nenhum registro encontrado com esse ID.");
                     }
@@ -112,11 +172,9 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
         public List<Endereco> GetAll()
         {
             List<Endereco> listaDeEnderecos = new List<Endereco>();
-
             try
             {
                 var sql = "SELECT * FROM ENDERECO ORDER BY cidade, rua";
-
                 using (var conexao = Conexao.Conectar())
                 using (var cmd = new MySqlCommand(sql, conexao))
                 {
@@ -124,16 +182,18 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                     while (dr.Read())
                     {
                         Endereco e = new Endereco();
-
                         e.ID_endereco = dr.GetInt32("ID_endereco");
                         e.estado = dr.GetString("estado");
                         e.rua = dr.GetString("rua");
-                        e.referencia = dr.GetString("referencia");
+
+                        
+                        e.referencia = dr.IsDBNull(dr.GetOrdinal("referencia")) ? null : dr.GetString("referencia");
+                        e.logradouro = dr.IsDBNull(dr.GetOrdinal("logradouro")) ? null : dr.GetString("logradouro");
+
                         e.numero = dr.GetString("numero");
                         e.bairro = dr.GetString("bairro");
                         e.cidade = dr.GetString("cidade");
                         e.cep = dr.GetString("cep");
-                        e.logradouro = dr.GetString("logradouro");
 
                         listaDeEnderecos.Add(e);
                     }
