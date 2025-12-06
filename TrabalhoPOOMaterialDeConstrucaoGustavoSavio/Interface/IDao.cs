@@ -6,7 +6,16 @@ using System.Threading.Tasks;
 
 namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Interface
 {
-    internal interface IDao
+    internal interface IDao<T>
     {
+        void Create(T t);
+
+
+        void Update(T t);
+
+        void Delete(int id);
+
+
+        List<T> GetAll();
     }
 }

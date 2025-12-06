@@ -3,28 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|c:\\users\\gustavo\\source\\repos\\trabalhopoomaterialdeconstrucaogustavosavio\\trabalhopoomaterialdeconstrucaogustavosavio\\utilitarios\\conexao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|solutionrelative:trabalhopoomaterialdeconstrucaogustavosavio\\utilitarios\\conexao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\trabalhopoomaterialdeconstrucaogustavosavio\\dao\\enderecodao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|solutionrelative:trabalhopoomaterialdeconstrucaogustavosavio\\dao\\enderecodao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\trabalhopoomaterialdeconstrucaogustavosavio\\modelos\\funcionario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|solutionrelative:trabalhopoomaterialdeconstrucaogustavosavio\\modelos\\funcionario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\trabalhopoomaterialdeconstrucaogustavosavio\\modelos\\endereco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|solutionrelative:trabalhopoomaterialdeconstrucaogustavosavio\\modelos\\endereco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\trabalhopoomaterialdeconstrucaogustavosavio\\dao\\funcionariodao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|solutionrelative:trabalhopoomaterialdeconstrucaogustavosavio\\dao\\funcionariodao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\trabalhopoomaterialdeconstrucaogustavosavio\\interface\\idao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|solutionrelative:trabalhopoomaterialdeconstrucaogustavosavio\\interface\\idao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\trabalhopoomaterialdeconstrucaogustavosavio\\dao\\funcionariodao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|solutionrelative:trabalhopoomaterialdeconstrucaogustavosavio\\dao\\funcionariodao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\trabalhopoomaterialdeconstrucaogustavosavio\\modelos\\endereco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|solutionrelative:trabalhopoomaterialdeconstrucaogustavosavio\\modelos\\endereco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\trabalhopoomaterialdeconstrucaogustavosavio\\modelos\\funcionario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|solutionrelative:trabalhopoomaterialdeconstrucaogustavosavio\\modelos\\funcionario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|c:\\users\\gustavo\\source\\repos\\trabalhopoomaterialdeconstrucaogustavosavio\\trabalhopoomaterialdeconstrucaogustavosavio\\utilitarios\\conexao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|solutionrelative:trabalhopoomaterialdeconstrucaogustavosavio\\utilitarios\\conexao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D55D296E-4F1E-45C0-B0DB-8E2FF9A22202}|TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio.csproj|C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\trabalhopoomaterialdeconstrucaogustavosavio\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -38,11 +38,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
               "Title": "Conexao.cs",
               "DocumentMoniker": "C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Utilitarios\\Conexao.cs",
               "RelativeDocumentMoniker": "TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Utilitarios\\Conexao.cs",
@@ -55,15 +55,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "Funcionario.cs",
               "DocumentMoniker": "C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Modelos\\Funcionario.cs",
               "RelativeDocumentMoniker": "TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Modelos\\Funcionario.cs",
               "ToolTip": "C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Modelos\\Funcionario.cs",
               "RelativeToolTip": "TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Modelos\\Funcionario.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAAB8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-06T13:41:31.961Z"
+              "WhenOpened": "2025-12-06T13:41:31.961Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -73,43 +74,46 @@
               "RelativeDocumentMoniker": "TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Modelos\\Endereco.cs",
               "ToolTip": "C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Modelos\\Endereco.cs",
               "RelativeToolTip": "TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Modelos\\Endereco.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-06T13:41:21.063Z"
+              "WhenOpened": "2025-12-06T13:41:21.063Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "IDao.cs",
               "DocumentMoniker": "C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Interface\\IDao.cs",
               "RelativeDocumentMoniker": "TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Interface\\IDao.cs",
               "ToolTip": "C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Interface\\IDao.cs",
               "RelativeToolTip": "TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Interface\\IDao.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-06T13:40:48.777Z"
+              "WhenOpened": "2025-12-06T13:40:48.777Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "FuncionarioDAO.cs",
               "DocumentMoniker": "C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Dao\\FuncionarioDAO.cs",
               "RelativeDocumentMoniker": "TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Dao\\FuncionarioDAO.cs",
               "ToolTip": "C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Dao\\FuncionarioDAO.cs",
               "RelativeToolTip": "TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Dao\\FuncionarioDAO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAYwIAAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-06T13:40:04.444Z"
+              "WhenOpened": "2025-12-06T13:40:04.444Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "EnderecoDAO.cs",
               "DocumentMoniker": "C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Dao\\EnderecoDAO.cs",
               "RelativeDocumentMoniker": "TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Dao\\EnderecoDAO.cs",
               "ToolTip": "C:\\Users\\Gustavo\\source\\repos\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Dao\\EnderecoDAO.cs",
               "RelativeToolTip": "TrabalhoPOOMaterialDeConstrucaoGustavoSavio\\Dao\\EnderecoDAO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIcAAAAAAAAAAAAQwJQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-06T13:39:51.599Z",
               "EditorCaption": ""

@@ -8,5 +8,25 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Modelos
 {
     internal class Funcionario
     {
+
+        public int ID_funcionario { get; set; }
+
+        public string nomeFuncionario { get; set; }
+
+        public string cpfFuncionario { get; set; }
+
+
+        public string cargoFuncionario { get; set; }
+
+
+        public string telefoneFuncionario { get; set; }
+
+        public int ID_endereco { get; set; }
+
+
+
+
+
+
     }
 }
