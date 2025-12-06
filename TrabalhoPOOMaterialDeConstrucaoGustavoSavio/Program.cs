@@ -33,23 +33,23 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
             }
 
 
-
             while (true)
             {
-                Console.Clear(); 
-                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("|===========================================================================|");
-                Console.WriteLine("|                                                                           |");
-                Console.WriteLine("|    BEM VINDO AO MENU DE CADASTRO DO MATERIAL DE CONSTRUÇÃO GUSTAVO LTDA   |");
-                Console.WriteLine("|                                                                           |");
+                Console.WriteLine("|                                                                           |");
+                Console.WriteLine("|    BEM VINDO AO MENU DE CADASTRO DO MATERIAL DE CONSTRUÇÃO GUSTAVO LTDA   |");
+                Console.WriteLine("|                                                                           |");
                 Console.WriteLine("|===========================================================================|");
-                Console.WriteLine("|                                                                           |");
-                Console.WriteLine("|                      1 - Cadastrar Funcionário                            |");
-                Console.WriteLine("|                      3 - Atualizar Funcionário                            |");
-                Console.WriteLine("|                2 - Cadastrar Cliente (Ainda não implementado)             |");
-                Console.WriteLine("|                          0 - Sair                                         |");
-                Console.WriteLine("|                       Escolha uma opção:                                  |");
-                Console.WriteLine("|                                                                           |");
+                Console.WriteLine("|                                                                           |");
+                Console.WriteLine("|                      1 - Cadastrar Funcionário                            |");
+                Console.WriteLine("|                      3 - Atualizar Funcionário                            |");
+                Console.WriteLine("|                      4 - Deletar Funcionário                              |");
+                Console.WriteLine("|             2 - Cadastrar Cliente (Ainda não implementado)                |");
+                Console.WriteLine("|                          0 - Sair                                         |");
+                Console.WriteLine("|                      Escolha uma opção:                                   |");
+                Console.WriteLine("|                                                                           |");
                 Console.WriteLine("|===========================================================================|");
 
 
@@ -62,8 +62,11 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                     case "1":
                         CadastrarFuncionario();
                         break;
-                    case "3": 
-                        AtualizarFuncionario();
+                    case "3":
+                        AtualizarFuncionario();
+                        break;
+                    case "4":
+                        DeletarFuncionario();
                         break;
                     case "2":
                         Console.WriteLine("Opção indisponível no momento. Pressione ENTER para continuar.");
@@ -85,7 +88,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("\n---  CADASTRO DE NOVO FUNCIONÁRIO ---");
+            Console.WriteLine("\n---  CADASTRO DE NOVO FUNCIONÁRIO ---");
             Console.ResetColor();
 
 
@@ -159,7 +162,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
 
                 Program.globalFuncionarioDao.Create(f);
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"\n Funcionário {f.nomeFuncionario}  cadastrado com sucesso!");
+                Console.WriteLine($"\n Funcionário {f.nomeFuncionario}  cadastrado com sucesso!");
                 Console.ResetColor();
             }
             catch (ArgumentException ex)
@@ -168,7 +171,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                 Console.WriteLine($"\n ERRO DE VALIDAÇÃO DO FUNCIONÁRIO: {ex.Message}");
                 Console.ResetColor();
 
-                
+
                 try
                 {
                     Console.WriteLine("\nTentando excluir o endereço criado...");
@@ -185,8 +188,8 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"\n ERRO ao cadastrar funcionário: {ex.Message}");
                 Console.ResetColor();
-                
-                try
+
+                try
                 {
                     Console.WriteLine("\nTentando excluir o endereço criado...");
                     Program.globalEnderecoDao.Delete(f.ID_endereco);
@@ -203,8 +206,8 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
         }
 
 
-       
-        public static void AtualizarFuncionario()
+
+        public static void AtualizarFuncionario()
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -226,8 +229,8 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
 
             try
             {
-               
-                f = globalFuncionarioDao.GetById(idFuncionario);
+
+                f = globalFuncionarioDao.GetById(idFuncionario);
                 if (f == null)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -238,7 +241,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                     return;
                 }
 
-                
+
                 e = globalEnderecoDao.GetById(f.ID_endereco);
                 if (e == null)
                 {
@@ -252,8 +255,8 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                 Console.ResetColor();
                 Console.WriteLine("\nPreencha os novos dados. Deixe o campo em branco para manter o valor atual.");
 
-                
-                Console.WriteLine("\n-- Atualizar Dados do Funcionário --");
+
+                Console.WriteLine("\n-- Atualizar Dados do Funcionário --");
 
                 Console.Write($"Nome Completo (Atual: {f.nomeFuncionario}): ");
                 string novoNome = Console.ReadLine();
@@ -269,15 +272,15 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
 
                 Console.Write($"Telefone (Atual: {f.telefoneFuncionario ?? "Vazio"}): ");
                 string novoTelefone = Console.ReadLine();
-               
-                if (novoTelefone.ToLower() == "null" || novoTelefone.ToLower() == "vazio")
+
+                if (novoTelefone.ToLower() == "null" || novoTelefone.ToLower() == "vazio")
                     f.telefoneFuncionario = null;
                 else if (!string.IsNullOrWhiteSpace(novoTelefone))
                     f.telefoneFuncionario = novoTelefone;
 
 
-               
-                if (e != null)
+
+                if (e != null)
                 {
                     Console.WriteLine("\n-- Atualizar Dados do Endereço --");
 
@@ -316,8 +319,8 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                     else if (novaReferencia == string.Empty) e.referencia = null;
                 }
 
-               
-                if (e != null)
+
+                if (e != null)
                 {
                     globalEnderecoDao.Update(e);
                     Console.ForegroundColor = ConsoleColor.Blue;
@@ -325,15 +328,15 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                     Console.ResetColor();
                 }
 
-                
-                globalFuncionarioDao.Update(f);
+
+                globalFuncionarioDao.Update(f);
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"\nFuncionário {f.nomeFuncionario} (ID: {f.ID_funcionario}) atualizado com sucesso!");
                 Console.ResetColor();
             }
-            catch (ArgumentException ex) 
-            {
+            catch (ArgumentException ex)
+            {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"\nERRO DE VALIDAÇÃO: {ex.Message}");
                 Console.ResetColor();
@@ -342,6 +345,66 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"\nERRO AO ATUALIZAR: {ex.Message}");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine("\nPressione ENTER para retornar ao Menu.");
+            Console.ReadLine();
+        }
+        public static void DeletarFuncionario()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\n--- EXCLUSÃO DE FUNCIONÁRIO ---");
+            Console.ResetColor();
+
+            Console.Write("Digite o ID do Funcionário que deseja deletar permanentemente: ");
+
+            if (int.TryParse(Console.ReadLine(), out int idFuncionario))
+            {
+               
+                try
+                {
+                   
+                    Funcionario f = globalFuncionarioDao.GetById(idFuncionario);
+
+                    if (f == null)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n ERRO: Funcionário com ID {idFuncionario} não encontrado.");
+                        Console.ResetColor();
+                        Console.WriteLine("Pressione ENTER para retornar ao Menu.");
+                        Console.ReadLine();
+                        return;
+                    }
+
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write($"\nCONFIRMA EXCLUSÃO do funcionário **{f.nomeFuncionario}** (ID: {idFuncionario}) e seu endereço? (S/N): ");
+                    Console.ResetColor();
+
+                    if (Console.ReadLine().ToUpper() == "S")
+                    {
+                        globalFuncionarioDao.Delete(idFuncionario);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"\n Funcionário **{f.nomeFuncionario}** e seu endereço foram deletados com sucesso!");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nOperação de exclusão cancelada.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"\n ERRO ao deletar funcionário: {ex.Message}");
+                    Console.ResetColor();
+                }
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n ID inválido. Por favor, digite um número.");
                 Console.ResetColor();
             }
 

@@ -13,6 +13,16 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
     public class FuncionarioDao : IDao<Funcionario>
     {
+        private readonly EnderecoDao _enderecoDao;
+
+
+        public FuncionarioDao(EnderecoDao enderecoDao)
+        {
+            _enderecoDao = enderecoDao ?? throw new ArgumentNullException(nameof(enderecoDao));
+        }
+
+        public FuncionarioDao() : this(new EnderecoDao()) { }
+
 
         private string RemoverAcentos(string texto)
         {
@@ -83,7 +93,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
         }
 
 
-   
+
         public void Create(Funcionario funcionario)
         {
 
@@ -97,7 +107,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
             try
             {
-               
+
                 string sql = "INSERT INTO FUNCIONARIO (nomeFuncionario, cpfFuncionario, cargoFuncionario, telefoneFuncionario, FK_Endereco_id_endereco) VALUES (@nomeFuncionario, @cpfFuncionario, @cargoFuncionario, @telefoneFuncionario, @FK_Endereco_id_endereco)";
 
                 using (var conexao = Conexao.Conectar())
@@ -109,7 +119,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
                     cmd.Parameters.AddWithValue("@telefoneFuncionario", telefoneDB);
 
-                   
+
                     cmd.Parameters.AddWithValue("@FK_Endereco_id_endereco", funcionario.ID_endereco);
 
                     cmd.ExecuteNonQuery();
@@ -133,7 +143,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
         }
 
 
-        
+
         public void Update(Funcionario funcionario)
         {
 
@@ -147,7 +157,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
             try
             {
-                
+
                 string sql = "UPDATE FUNCIONARIO SET nomeFuncionario = @nomeFuncionario, cpfFuncionario = @cpfFuncionario, cargoFuncionario = @cargoFuncionario, telefoneFuncionario = @telefoneFuncionario, FK_Endereco_id_endereco = @FK_Endereco_id_endereco WHERE ID_funcionario = @ID_funcionario";
 
                 using (var conexao = Conexao.Conectar())
@@ -189,7 +199,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
         public void Delete(int id_funcionario)
         {
-            
+
             Funcionario funcionarioParaDeletar = GetById(id_funcionario);
 
             if (funcionarioParaDeletar == null)
@@ -199,7 +209,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
             int id_endereco_a_deletar = funcionarioParaDeletar.ID_endereco;
 
-           
+
             try
             {
                 string sqlFuncionario = "DELETE FROM FUNCIONARIO WHERE ID_funcionario = @ID_funcionario";
@@ -212,6 +222,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
                     if (linhasAfetadas == 0)
                     {
+                   
                         throw new Exception("Nenhum funcionário encontrado com o ID fornecido para exclusão.");
                     }
                 }
@@ -221,26 +232,13 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                 throw new Exception($"Erro ao deletar funcionário (etapa 1): {ex.Message}");
             }
 
-           
+
             try
             {
-                string sqlEndereco = "DELETE FROM ENDERECO WHERE ID_endereco = @ID_endereco";
-
-                using (var conexao = Conexao.Conectar())
-                using (var cmdEndereco = new MySqlCommand(sqlEndereco, conexao))
-                {
-                    cmdEndereco.Parameters.AddWithValue("@ID_endereco", id_endereco_a_deletar);
-                    var linhasAfetadas = cmdEndereco.ExecuteNonQuery();
-
-                    if (linhasAfetadas == 0)
-                    {
-                      
-                    }
-                }
+                _enderecoDao.Delete(id_endereco_a_deletar);
             }
             catch (Exception ex)
             {
-                
                 throw new Exception($"Atenção: Funcionário deletado, mas falha ao deletar Endereço (ID: {id_endereco_a_deletar}): {ex.Message}");
             }
         }
