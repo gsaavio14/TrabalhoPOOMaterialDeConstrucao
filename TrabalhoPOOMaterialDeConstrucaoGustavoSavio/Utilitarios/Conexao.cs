@@ -1,12 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Utilitarios
+
+using MySql.Data.MySqlClient;
+using System;
+
+
+namespace ConexaoBancodeDados.Utilitarios
 {
     internal class Conexao
     {
+        private const string strconexao = "server=localhost;port=3306;uid=root;pwd=ROOT;database=TrabalhoPOOGustavo";
+
+
+
+        public static MySqlConnection Conectar()
+        {
+            MySqlConnection conexao = new MySqlConnection(strconexao);
+            try
+            {
+
+                conexao.Open();
+                return conexao;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+
+            }
+        }
     }
 }
