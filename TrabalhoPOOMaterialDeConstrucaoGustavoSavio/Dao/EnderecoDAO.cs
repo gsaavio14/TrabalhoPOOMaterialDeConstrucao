@@ -10,8 +10,8 @@ using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Modelos;
 
 namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 {
-   
-    public class EnderecoDao : IDao<Endereco>
+
+    public class EnderecoDao : IDao<Endereco>
     {
         private string ValidarECorrigirCep(string cepBruto)
         {
@@ -61,33 +61,36 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
         public int CreateAndGetId(Endereco endereco)
         {
-            
-            endereco.estado = ValidarEstado(endereco.estado);
+
+            endereco.estado = ValidarEstado(endereco.estado);
             endereco.cep = ValidarECorrigirCep(endereco.cep);
             endereco.cidade = ValidarCidade(endereco.cidade);
 
-
+            
+            object ruaDB = string.IsNullOrWhiteSpace(endereco.rua) ? (object)DBNull.Value : endereco.rua;
+            object numeroDB = string.IsNullOrWhiteSpace(endereco.numero) ? (object)DBNull.Value : endereco.numero;
+            object bairroDB = string.IsNullOrWhiteSpace(endereco.bairro) ? (object)DBNull.Value : endereco.bairro;
             object logradouroDB = string.IsNullOrWhiteSpace(endereco.logradouro) ? (object)DBNull.Value : endereco.logradouro;
             object referenciaDB = string.IsNullOrWhiteSpace(endereco.referencia) ? (object)DBNull.Value : endereco.referencia;
 
             try
             {
-                string sql = @"INSERT INTO ENDERECO (estado, rua, referencia, numero, bairro, cidade, cep, logradouro) 
-                               VALUES (@estado, @rua, @referencia, @numero, @bairro, @cidade, @cep, @logradouro)";
+                string sql = @"INSERT INTO ENDERECO (estado, rua, referencia, numero, bairro, cidade, cep, logradouro) 
+                                 VALUES (@estado, @rua, @referencia, @numero, @bairro, @cidade, @cep, @logradouro)";
 
                 using (var conexao = Conexao.Conectar())
                 using (var cmd = new MySqlCommand(sql, conexao))
                 {
+                    
                     cmd.Parameters.AddWithValue("@estado", endereco.estado);
-                    cmd.Parameters.AddWithValue("@rua", endereco.rua);
-                    cmd.Parameters.AddWithValue("@numero", endereco.numero);
-                    cmd.Parameters.AddWithValue("@bairro", endereco.bairro);
+                    cmd.Parameters.AddWithValue("@rua", ruaDB);
+                    cmd.Parameters.AddWithValue("@referencia", referenciaDB);
+                    cmd.Parameters.AddWithValue("@numero", numeroDB);
+                    cmd.Parameters.AddWithValue("@bairro", bairroDB);
                     cmd.Parameters.AddWithValue("@cidade", endereco.cidade);
                     cmd.Parameters.AddWithValue("@cep", endereco.cep);
-
-
                     cmd.Parameters.AddWithValue("@logradouro", logradouroDB);
-                    cmd.Parameters.AddWithValue("@referencia", referenciaDB);
+
 
                     cmd.ExecuteNonQuery();
 
@@ -104,8 +107,8 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
         public void Create(Endereco endereco) => CreateAndGetId(endereco);
 
 
-       
-        public Endereco GetById(int id)
+
+        public Endereco GetById(int id)
         {
             try
             {
@@ -121,19 +124,22 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                         Endereco e = new Endereco();
                         e.ID_endereco = dr.GetInt32("ID_endereco");
                         e.estado = dr.GetString("estado");
-                        e.rua = dr.GetString("rua");
-                        
-                        e.referencia = dr.IsDBNull(dr.GetOrdinal("referencia")) ? null : dr.GetString("referencia");
+
+                      
+                        e.rua = dr.IsDBNull(dr.GetOrdinal("rua")) ? null : dr.GetString("rua");
+
+                        e.referencia = dr.IsDBNull(dr.GetOrdinal("referencia")) ? null : dr.GetString("referencia");
                         e.logradouro = dr.IsDBNull(dr.GetOrdinal("logradouro")) ? null : dr.GetString("logradouro");
 
-                        e.numero = dr.GetString("numero");
-                        e.bairro = dr.GetString("bairro");
+                        e.numero = dr.IsDBNull(dr.GetOrdinal("numero")) ? null : dr.GetString("numero");
+                        e.bairro = dr.IsDBNull(dr.GetOrdinal("bairro")) ? null : dr.GetString("bairro");
+
                         e.cidade = dr.GetString("cidade");
                         e.cep = dr.GetString("cep");
                         return e;
                     }
-                    return null; 
-                }
+                    return null;
+                }
             }
             catch (Exception ex)
             {
@@ -148,28 +154,42 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
             endereco.cep = ValidarECorrigirCep(endereco.cep);
             endereco.cidade = ValidarCidade(endereco.cidade);
 
+           
+            object ruaDB = string.IsNullOrWhiteSpace(endereco.rua) ? (object)DBNull.Value : endereco.rua;
+            object numeroDB = string.IsNullOrWhiteSpace(endereco.numero) ? (object)DBNull.Value : endereco.numero;
+            object bairroDB = string.IsNullOrWhiteSpace(endereco.bairro) ? (object)DBNull.Value : endereco.bairro;
             object logradouroDB = string.IsNullOrWhiteSpace(endereco.logradouro) ? (object)DBNull.Value : endereco.logradouro;
             object referenciaDB = string.IsNullOrWhiteSpace(endereco.referencia) ? (object)DBNull.Value : endereco.referencia;
 
             try
             {
-                
-                string sql = @"UPDATE ENDERECO SET estado = @estado, rua = @rua, referencia = @referencia, numero = @numero, bairro = @bairro, cidade = @cidade, cep = @cep, logradouro = @logradouro WHERE ID_endereco = @ID_endereco";
+
+                string sql = @"UPDATE ENDERECO SET 
+                                 estado = @estado, 
+                                 rua = @rua, 
+                                 referencia = @referencia, 
+                                 numero = @numero, 
+                                 bairro = @bairro, 
+                                 cidade = @cidade, 
+                                 cep = @cep, 
+                                 logradouro = @logradouro 
+                              WHERE ID_endereco = @ID_endereco";
 
                 using (var conexao = Conexao.Conectar())
                 using (var cmd = new MySqlCommand(sql, conexao))
                 {
                     cmd.Parameters.AddWithValue("@estado", endereco.estado);
-                    cmd.Parameters.AddWithValue("@rua", endereco.rua);
-                    cmd.Parameters.AddWithValue("@numero", endereco.numero);
-                    cmd.Parameters.AddWithValue("@bairro", endereco.bairro);
+                    cmd.Parameters.AddWithValue("@rua", ruaDB);
+                    cmd.Parameters.AddWithValue("@referencia", referenciaDB);
+                    cmd.Parameters.AddWithValue("@numero", numeroDB);
+                    cmd.Parameters.AddWithValue("@bairro", bairroDB);
                     cmd.Parameters.AddWithValue("@cidade", endereco.cidade);
                     cmd.Parameters.AddWithValue("@cep", endereco.cep);
+                    cmd.Parameters.AddWithValue("@logradouro", logradouroDB);
+
+                    
                     cmd.Parameters.AddWithValue("@ID_endereco", endereco.ID_endereco);
 
-
-                    cmd.Parameters.AddWithValue("@logradouro", logradouroDB);
-                    cmd.Parameters.AddWithValue("@referencia", referenciaDB);
 
                     if (cmd.ExecuteNonQuery() == 0)
                     {
@@ -221,14 +241,17 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                         Endereco e = new Endereco();
                         e.ID_endereco = dr.GetInt32("ID_endereco");
                         e.estado = dr.GetString("estado");
-                        e.rua = dr.GetString("rua");
+
+                       
+                        e.rua = dr.IsDBNull(dr.GetOrdinal("rua")) ? null : dr.GetString("rua");
 
 
                         e.referencia = dr.IsDBNull(dr.GetOrdinal("referencia")) ? null : dr.GetString("referencia");
                         e.logradouro = dr.IsDBNull(dr.GetOrdinal("logradouro")) ? null : dr.GetString("logradouro");
 
-                        e.numero = dr.GetString("numero");
-                        e.bairro = dr.GetString("bairro");
+                        e.numero = dr.IsDBNull(dr.GetOrdinal("numero")) ? null : dr.GetString("numero");
+                        e.bairro = dr.IsDBNull(dr.GetOrdinal("bairro")) ? null : dr.GetString("bairro");
+
                         e.cidade = dr.GetString("cidade");
                         e.cep = dr.GetString("cep");
 

@@ -6,8 +6,6 @@ using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Interface;
 using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Modelos;
 using System.Text;
 using System.Globalization;
-
-
 using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Utilitarios;
 
 namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
@@ -15,8 +13,8 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
     public class FuncionarioDao : IDao<Funcionario>
     {
-     
-        private string RemoverAcentos(string texto)
+
+        private string RemoverAcentos(string texto)
         {
             if (string.IsNullOrWhiteSpace(texto))
                 return texto;
@@ -85,8 +83,8 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
         }
 
 
-       
-        public void Create(Funcionario funcionario)
+   
+        public void Create(Funcionario funcionario)
         {
 
             funcionario.nomeFuncionario = ValidarNome(funcionario.nomeFuncionario);
@@ -94,13 +92,13 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
             funcionario.telefoneFuncionario = ValidarTelefone(funcionario.telefoneFuncionario);
 
             object telefoneDB = funcionario.telefoneFuncionario == null
-                 ? (object)DBNull.Value
-                 : funcionario.telefoneFuncionario;
+              ? (object)DBNull.Value
+              : funcionario.telefoneFuncionario;
 
             try
             {
-
-                string sql = "INSERT INTO FUNCIONARIO (nomeFuncionario, cpfFuncionario, cargoFuncionario, telefoneFuncionario, FK_Endereco_id_endereco) VALUES (@nomeFuncionario, @cpfFuncionario, @cargoFuncionario, @telefoneFuncionario, @ID_endereco)";
+               
+                string sql = "INSERT INTO FUNCIONARIO (nomeFuncionario, cpfFuncionario, cargoFuncionario, telefoneFuncionario, FK_Endereco_id_endereco) VALUES (@nomeFuncionario, @cpfFuncionario, @cargoFuncionario, @telefoneFuncionario, @FK_Endereco_id_endereco)";
 
                 using (var conexao = Conexao.Conectar())
                 using (var cmd = new MySqlCommand(sql, conexao))
@@ -111,16 +109,17 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
                     cmd.Parameters.AddWithValue("@telefoneFuncionario", telefoneDB);
 
-                    cmd.Parameters.AddWithValue("@ID_endereco", funcionario.ID_endereco);
+                   
+                    cmd.Parameters.AddWithValue("@FK_Endereco_id_endereco", funcionario.ID_endereco);
 
                     cmd.ExecuteNonQuery();
                 }
             }
-          
-            catch (MySqlException sqlEx)
+
+            catch (MySqlException sqlEx)
             {
-                
-                if (sqlEx.Number == 1062)
+
+                if (sqlEx.Number == 1062)
                 {
                     throw new Exception("Cadastro de funcionário inválido. CPF duplicado.");
                 }
@@ -134,7 +133,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
         }
 
 
-    
+        
         public void Update(Funcionario funcionario)
         {
 
@@ -143,13 +142,13 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
             funcionario.telefoneFuncionario = ValidarTelefone(funcionario.telefoneFuncionario);
 
             object telefoneDB = funcionario.telefoneFuncionario == null
-                 ? (object)DBNull.Value
-                 : funcionario.telefoneFuncionario;
+              ? (object)DBNull.Value
+              : funcionario.telefoneFuncionario;
 
             try
             {
-
-                string sql = "UPDATE FUNCIONARIO SET nomeFuncionario = @nomeFuncionario, cpfFuncionario = @cpfFuncionario, cargoFuncionario = @cargoFuncionario, telefoneFuncionario = @telefoneFuncionario, FK_Endereco_id_endereco = @ID_endereco WHERE ID_funcionario = @ID_funcionario";
+                
+                string sql = "UPDATE FUNCIONARIO SET nomeFuncionario = @nomeFuncionario, cpfFuncionario = @cpfFuncionario, cargoFuncionario = @cargoFuncionario, telefoneFuncionario = @telefoneFuncionario, FK_Endereco_id_endereco = @FK_Endereco_id_endereco WHERE ID_funcionario = @ID_funcionario";
 
                 using (var conexao = Conexao.Conectar())
                 using (var cmd = new MySqlCommand(sql, conexao))
@@ -160,7 +159,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
                     cmd.Parameters.AddWithValue("@telefoneFuncionario", telefoneDB);
 
-                    cmd.Parameters.AddWithValue("@ID_endereco", funcionario.ID_endereco);
+                    cmd.Parameters.AddWithValue("@FK_Endereco_id_endereco", funcionario.ID_endereco);
                     cmd.Parameters.AddWithValue("@ID_funcionario", funcionario.ID_funcionario);
 
                     if (cmd.ExecuteNonQuery() == 0)
@@ -169,11 +168,11 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                     }
                 }
             }
-           
-            catch (MySqlException sqlEx)
+
+            catch (MySqlException sqlEx)
             {
-                
-                if (sqlEx.Number == 1062)
+
+                if (sqlEx.Number == 1062)
                 {
                     throw new Exception("Erro ao atualizar funcionário. O CPF informado já pertence a outro funcionário.");
                 }
@@ -187,19 +186,29 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
         }
 
 
-       
-        public void Delete(int id)
+
+        public void Delete(int id_funcionario)
         {
+            
+            Funcionario funcionarioParaDeletar = GetById(id_funcionario);
+
+            if (funcionarioParaDeletar == null)
+            {
+                throw new Exception("Nenhum funcionário encontrado com o ID fornecido para exclusão.");
+            }
+
+            int id_endereco_a_deletar = funcionarioParaDeletar.ID_endereco;
+
+           
             try
             {
-                string sql = "DELETE FROM FUNCIONARIO WHERE ID_funcionario = @ID_funcionario";
+                string sqlFuncionario = "DELETE FROM FUNCIONARIO WHERE ID_funcionario = @ID_funcionario";
 
                 using (var conexao = Conexao.Conectar())
-                using (var cmd = new MySqlCommand(sql, conexao))
+                using (var cmdFuncionario = new MySqlCommand(sqlFuncionario, conexao))
                 {
-                    cmd.Parameters.AddWithValue("@ID_funcionario", id);
-
-                    var linhasAfetadas = cmd.ExecuteNonQuery();
+                    cmdFuncionario.Parameters.AddWithValue("@ID_funcionario", id_funcionario);
+                    var linhasAfetadas = cmdFuncionario.ExecuteNonQuery();
 
                     if (linhasAfetadas == 0)
                     {
@@ -209,12 +218,35 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
             }
             catch (Exception ex)
             {
-                throw new Exception($"Erro ao deletar funcionário: {ex.Message}");
+                throw new Exception($"Erro ao deletar funcionário (etapa 1): {ex.Message}");
+            }
+
+           
+            try
+            {
+                string sqlEndereco = "DELETE FROM ENDERECO WHERE ID_endereco = @ID_endereco";
+
+                using (var conexao = Conexao.Conectar())
+                using (var cmdEndereco = new MySqlCommand(sqlEndereco, conexao))
+                {
+                    cmdEndereco.Parameters.AddWithValue("@ID_endereco", id_endereco_a_deletar);
+                    var linhasAfetadas = cmdEndereco.ExecuteNonQuery();
+
+                    if (linhasAfetadas == 0)
+                    {
+                      
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                throw new Exception($"Atenção: Funcionário deletado, mas falha ao deletar Endereço (ID: {id_endereco_a_deletar}): {ex.Message}");
             }
         }
 
-        
-        public Funcionario GetById(int id)
+
+        public Funcionario GetById(int id)
         {
             try
             {
@@ -235,13 +267,13 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                             nomeFuncionario = dr.GetString("nomeFuncionario"),
                             cpfFuncionario = dr.GetString("cpfFuncionario"),
                             cargoFuncionario = dr.GetString("cargoFuncionario"),
-                           
-                            telefoneFuncionario = dr.IsDBNull(dr.GetOrdinal("telefoneFuncionario")) ? null : dr.GetString("telefoneFuncionario"),
+
+                            telefoneFuncionario = dr.IsDBNull(dr.GetOrdinal("telefoneFuncionario")) ? null : dr.GetString("telefoneFuncionario"),
                             ID_endereco = dr.GetInt32("FK_Endereco_id_endereco")
                         };
                     }
+                    return funcionario;
                 }
-                return funcionario;
             }
             catch (Exception ex)
             {
@@ -249,8 +281,8 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
             }
         }
 
-        
-        public List<Funcionario> GetAll()
+
+        public List<Funcionario> GetAll()
         {
             List<Funcionario> listadeFuncionarios = new List<Funcionario>();
 
@@ -270,8 +302,8 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                         f.nomeFuncionario = dr.GetString("nomeFuncionario");
                         f.cpfFuncionario = dr.GetString("cpfFuncionario");
                         f.cargoFuncionario = dr.GetString("cargoFuncionario");
-                        
-                        f.telefoneFuncionario = dr.IsDBNull(dr.GetOrdinal("telefoneFuncionario")) ? null : dr.GetString("telefoneFuncionario");
+
+                        f.telefoneFuncionario = dr.IsDBNull(dr.GetOrdinal("telefoneFuncionario")) ? null : dr.GetString("telefoneFuncionario");
                         f.ID_endereco = dr.GetInt32("FK_Endereco_id_endereco");
 
                         listadeFuncionarios.Add(f);
