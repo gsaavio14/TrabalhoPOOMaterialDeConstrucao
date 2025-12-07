@@ -10,11 +10,9 @@ using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Utilitarios;
 
 namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 {
-
     public class FuncionarioDao : IDao<Funcionario>
     {
         private readonly EnderecoDao _enderecoDao;
-
 
         public FuncionarioDao(EnderecoDao enderecoDao)
         {
@@ -23,7 +21,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
         public FuncionarioDao() : this(new EnderecoDao()) { }
 
-
+       
         private string RemoverAcentos(string texto)
         {
             if (string.IsNullOrWhiteSpace(texto))
@@ -92,8 +90,43 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
             return telLimpo;
         }
 
+       
+        private void ValidarDatas(DateTime dataNascimento, DateTime dataAdmissao)
+        {
+         
+            if (dataNascimento > DateTime.Today)
+            {
+                throw new ArgumentException("A Data de Nascimento não pode ser uma data futura.");
+            }
 
+           
+            if (dataNascimento.AddYears(16) > DateTime.Today)
+            {
+                throw new ArgumentException("O funcionário deve ter pelo menos 16 anos.");
+            }
 
+           
+            if (dataAdmissao > DateTime.Today)
+            {
+                throw new ArgumentException("A Data de Admissão não pode ser uma data futura.");
+            }
+
+          
+            if (dataAdmissao < dataNascimento.AddYears(16))
+            {
+                throw new ArgumentException("A Data de Admissão é inválida. O funcionário deve ter no mínimo 16 anos na data de admissão.");
+            }
+        }
+
+        private void ValidarSalario(decimal salario)
+        {
+            if (salario <= 0)
+            {
+                throw new ArgumentException("O Valor do Salário deve ser maior que zero.");
+            }
+        }
+
+       
         public void Create(Funcionario funcionario)
         {
 
@@ -101,14 +134,19 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
             funcionario.cpfFuncionario = ValidarCPF(funcionario.cpfFuncionario);
             funcionario.telefoneFuncionario = ValidarTelefone(funcionario.telefoneFuncionario);
 
+            ValidarSalario(funcionario.valorSalarioFuncionario);
+            ValidarDatas(funcionario.dataNascimentoFuncionario, funcionario.dataAdmissaoFuncionario); 
+
+
             object telefoneDB = funcionario.telefoneFuncionario == null
               ? (object)DBNull.Value
               : funcionario.telefoneFuncionario;
 
             try
             {
-
-                string sql = "INSERT INTO FUNCIONARIO (nomeFuncionario, cpfFuncionario, cargoFuncionario, telefoneFuncionario, FK_Endereco_id_endereco) VALUES (@nomeFuncionario, @cpfFuncionario, @cargoFuncionario, @telefoneFuncionario, @FK_Endereco_id_endereco)";
+                
+                string sql = "INSERT INTO FUNCIONARIO (nomeFuncionario, cpfFuncionario, cargoFuncionario, telefoneFuncionario, dataAdmissaoFuncionario, dataNascimentoFuncionario, valorSalarioFuncionario, FK_Endereco_id_endereco) " +
+                             "VALUES (@nomeFuncionario, @cpfFuncionario, @cargoFuncionario, @telefoneFuncionario, @dataAdmissaoFuncionario, @dataNascimentoFuncionario, @valorSalarioFuncionario, @FK_Endereco_id_endereco)";
 
                 using (var conexao = Conexao.Conectar())
                 using (var cmd = new MySqlCommand(sql, conexao))
@@ -116,9 +154,11 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                     cmd.Parameters.AddWithValue("@nomeFuncionario", funcionario.nomeFuncionario);
                     cmd.Parameters.AddWithValue("@cpfFuncionario", funcionario.cpfFuncionario);
                     cmd.Parameters.AddWithValue("@cargoFuncionario", funcionario.cargoFuncionario);
-
                     cmd.Parameters.AddWithValue("@telefoneFuncionario", telefoneDB);
 
+                    cmd.Parameters.AddWithValue("@dataAdmissaoFuncionario", funcionario.dataAdmissaoFuncionario);
+                    cmd.Parameters.AddWithValue("@dataNascimentoFuncionario", funcionario.dataNascimentoFuncionario);
+                    cmd.Parameters.AddWithValue("@valorSalarioFuncionario", funcionario.valorSalarioFuncionario);
 
                     cmd.Parameters.AddWithValue("@FK_Endereco_id_endereco", funcionario.ID_endereco);
 
@@ -143,7 +183,6 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
         }
 
 
-
         public void Update(Funcionario funcionario)
         {
 
@@ -151,14 +190,16 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
             funcionario.cpfFuncionario = ValidarCPF(funcionario.cpfFuncionario);
             funcionario.telefoneFuncionario = ValidarTelefone(funcionario.telefoneFuncionario);
 
+            ValidarSalario(funcionario.valorSalarioFuncionario);
+            ValidarDatas(funcionario.dataNascimentoFuncionario, funcionario.dataAdmissaoFuncionario); 
+
             object telefoneDB = funcionario.telefoneFuncionario == null
               ? (object)DBNull.Value
               : funcionario.telefoneFuncionario;
 
             try
             {
-
-                string sql = "UPDATE FUNCIONARIO SET nomeFuncionario = @nomeFuncionario, cpfFuncionario = @cpfFuncionario, cargoFuncionario = @cargoFuncionario, telefoneFuncionario = @telefoneFuncionario, FK_Endereco_id_endereco = @FK_Endereco_id_endereco WHERE ID_funcionario = @ID_funcionario";
+                string sql = "UPDATE FUNCIONARIO SET nomeFuncionario = @nomeFuncionario, cpfFuncionario = @cpfFuncionario, cargoFuncionario = @cargoFuncionario, telefoneFuncionario = @telefoneFuncionario, dataAdmissaoFuncionario = @dataAdmissaoFuncionario, dataNascimentoFuncionario = @dataNascimentoFuncionario, valorSalarioFuncionario = @valorSalarioFuncionario, FK_Endereco_id_endereco = @FK_Endereco_id_endereco WHERE ID_funcionario = @ID_funcionario";
 
                 using (var conexao = Conexao.Conectar())
                 using (var cmd = new MySqlCommand(sql, conexao))
@@ -168,6 +209,11 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                     cmd.Parameters.AddWithValue("@cargoFuncionario", funcionario.cargoFuncionario);
 
                     cmd.Parameters.AddWithValue("@telefoneFuncionario", telefoneDB);
+
+                   
+                    cmd.Parameters.AddWithValue("@dataAdmissaoFuncionario", funcionario.dataAdmissaoFuncionario);
+                    cmd.Parameters.AddWithValue("@dataNascimentoFuncionario", funcionario.dataNascimentoFuncionario);
+                    cmd.Parameters.AddWithValue("@valorSalarioFuncionario", funcionario.valorSalarioFuncionario);
 
                     cmd.Parameters.AddWithValue("@FK_Endereco_id_endereco", funcionario.ID_endereco);
                     cmd.Parameters.AddWithValue("@ID_funcionario", funcionario.ID_funcionario);
@@ -196,7 +242,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
         }
 
 
-
+       
         public void Delete(int id_funcionario)
         {
 
@@ -222,7 +268,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
 
                     if (linhasAfetadas == 0)
                     {
-                   
+
                         throw new Exception("Nenhum funcionário encontrado com o ID fornecido para exclusão.");
                     }
                 }
@@ -244,10 +290,12 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
         }
 
 
+        
         public Funcionario GetById(int id)
         {
             try
             {
+               
                 var sql = "SELECT * FROM FUNCIONARIO WHERE ID_funcionario = @ID_funcionario";
                 Funcionario funcionario = null;
 
@@ -266,6 +314,11 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                             cpfFuncionario = dr.GetString("cpfFuncionario"),
                             cargoFuncionario = dr.GetString("cargoFuncionario"),
 
+                         
+                            dataAdmissaoFuncionario = dr.GetDateTime("dataAdmissaoFuncionario"),
+                            dataNascimentoFuncionario = dr.GetDateTime("dataNascimentoFuncionario"),
+                            valorSalarioFuncionario = dr.GetDecimal("valorSalarioFuncionario"),
+
                             telefoneFuncionario = dr.IsDBNull(dr.GetOrdinal("telefoneFuncionario")) ? null : dr.GetString("telefoneFuncionario"),
                             ID_endereco = dr.GetInt32("FK_Endereco_id_endereco")
                         };
@@ -280,12 +333,14 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
         }
 
 
+        
         public List<Funcionario> GetAll()
         {
             List<Funcionario> listadeFuncionarios = new List<Funcionario>();
 
             try
             {
+                
                 var sql = "SELECT * FROM FUNCIONARIO ORDER BY nomeFuncionario";
 
                 using (var conexao = Conexao.Conectar())
@@ -300,6 +355,11 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao
                         f.nomeFuncionario = dr.GetString("nomeFuncionario");
                         f.cpfFuncionario = dr.GetString("cpfFuncionario");
                         f.cargoFuncionario = dr.GetString("cargoFuncionario");
+
+                       
+                        f.dataAdmissaoFuncionario = dr.GetDateTime("dataAdmissaoFuncionario");
+                        f.dataNascimentoFuncionario = dr.GetDateTime("dataNascimentoFuncionario");
+                        f.valorSalarioFuncionario = dr.GetDecimal("valorSalarioFuncionario");
 
                         f.telefoneFuncionario = dr.IsDBNull(dr.GetOrdinal("telefoneFuncionario")) ? null : dr.GetString("telefoneFuncionario");
                         f.ID_endereco = dr.GetInt32("FK_Endereco_id_endereco");

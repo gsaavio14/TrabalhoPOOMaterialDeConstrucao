@@ -23,6 +23,12 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Modelos
 
         public int ID_endereco { get; set; }
 
+        public DateTime dataAdmissaoFuncionario { get; set; }
+
+        public decimal valorSalarioFuncionario { get; set; }
+
+        public DateTime dataNascimentoFuncionario { get; set; }
+
 
 
 

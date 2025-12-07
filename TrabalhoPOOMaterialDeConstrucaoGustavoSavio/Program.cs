@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Dao;
 using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Modelos;
 using TrabalhoPOOMaterialDeConstrucaoGustavoSavio.Utilitarios;
@@ -39,17 +40,17 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("|===========================================================================|");
                 Console.WriteLine("|                                                                           |");
-                Console.WriteLine("|    BEM VINDO AO MENU DE CADASTRO DO MATERIAL DE CONSTRUÇÃO GUSTAVO LTDA    |");
+                Console.WriteLine("|    BEM VINDO AO MENU DE CADASTRO DO MATERIAL DE CONSTRUÇÃO GUSTAVO LTDA   |");
                 Console.WriteLine("|                                                                           |");
                 Console.WriteLine("|===========================================================================|");
                 Console.WriteLine("|                                                                           |");
-                Console.WriteLine("|                      1 - Cadastrar Funcionário                            |");
-                Console.WriteLine("|                      2 - Listar Funcionários                              |");
-                Console.WriteLine("|                      3 - Atualizar Funcionário                            |");
-                Console.WriteLine("|                      4 - Deletar Funcionário                              |");
+                Console.WriteLine("|                       1 - Cadastrar Funcionário                           |");
+                Console.WriteLine("|                       2 - Listar Funcionários                             |");
+                Console.WriteLine("|                       3 - Atualizar Funcionário                           |");
+                Console.WriteLine("|                       4 - Deletar Funcionário                             |");
                 Console.WriteLine("|                                                                           |");
-                Console.WriteLine("|                          0 - Sair                                         |");
-                Console.WriteLine("|                      Escolha uma opção:                                   |");
+                Console.WriteLine("|                         0 - Sair                                          |");
+                Console.WriteLine("|                       Escolha uma opção:                                  |");
                 Console.WriteLine("|                                                                           |");
                 Console.WriteLine("|===========================================================================|");
 
@@ -83,7 +84,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
             }
         }
 
-  
+
         public static void ListarFuncionarios()
         {
             Console.Clear();
@@ -93,7 +94,7 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
 
             try
             {
-                
+
                 List<Funcionario> funcionarios = globalFuncionarioDao.GetAll();
 
                 if (funcionarios.Count == 0)
@@ -104,22 +105,66 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                 }
                 else
                 {
-                   
-                    Console.WriteLine("\n------------------------------------------------------------------------------------------------------------------");
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine($"| {"ID",-5} | {"Nome Completo",-30} | {"CPF",-15} | {"Cargo",-20} | {"Telefone",-15} | {"ID Endereço",-12} |");
-                    Console.WriteLine("------------------------------------------------------------------------------------------------------------------");
+                    Console.WriteLine($"\nTotal de Funcionários Encontrados: {funcionarios.Count}");
                     Console.ResetColor();
 
-                
+                    Console.WriteLine("=================================================");
+
                     foreach (Funcionario f in funcionarios)
                     {
-                        Console.WriteLine($"| {f.ID_funcionario,-5} | {f.nomeFuncionario,-30} | {f.cpfFuncionario,-15} | {f.cargoFuncionario,-20} | {f.telefoneFuncionario,-15} | {f.ID_endereco,-12} |");
+                        Endereco e = null;
+
+                        try
+                        {
+                           
+                            e = globalEnderecoDao.GetById(f.ID_endereco);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"\nAVISO: Erro ao buscar endereço (ID: {f.ID_endereco}) para {f.nomeFuncionario}: {ex.Message}");
+                            Console.ResetColor();
+                        }
+
+                     
+                        string salarioFormatado = f.valorSalarioFuncionario.ToString("C", new CultureInfo("pt-BR"));
+
+                       
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine($"\nID: {f.ID_funcionario} - {f.nomeFuncionario}");
+                        Console.ResetColor();
+
+                        Console.WriteLine("-------------------------------------------------");
+                        Console.WriteLine($"  Cargo:        {f.cargoFuncionario}");
+                        Console.WriteLine($"  CPF:          {f.cpfFuncionario}");
+                        Console.WriteLine($"  Telefone:     {f.telefoneFuncionario}");
+                        Console.WriteLine($"  Salário:      {salarioFormatado}");
+                        Console.WriteLine($"  Admissão:     {f.dataAdmissaoFuncionario.ToShortDateString()}");
+                        Console.WriteLine($"  Nascimento:   {f.dataNascimentoFuncionario.ToShortDateString()}");
+
+                    
+                        Console.WriteLine("\n-- Endereço --");
+                        if (e != null)
+                        {
+                            string enderecoLinha1 = $"{e.rua}, {e.numero}";
+
+                            Console.WriteLine($"  Rua/Número:   {enderecoLinha1}");
+                            Console.WriteLine($"  Bairro:       {e.bairro}");
+                            Console.WriteLine($"  Cidade/UF:    {e.cidade}/{e.estado}");
+                            Console.WriteLine($"  CEP:          {e.cep}");
+                            Console.WriteLine($"  Logradouro:   {e.logradouro ?? ""}");
+                            Console.WriteLine($"  Referência:   {e.referencia ?? ""}");
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"  * Endereço não encontrado ou indisponível (ID: {f.ID_endereco}) *");
+                            Console.ResetColor();
+                        }
+
+                        Console.WriteLine("=================================================");
                     }
-                    Console.WriteLine("------------------------------------------------------------------------------------------------------------------");
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"\nTotal de Funcionários: {funcionarios.Count}");
-                    Console.ResetColor();
                 }
             }
             catch (Exception ex)
@@ -132,6 +177,8 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
             Console.WriteLine("\nPressione ENTER para retornar ao Menu.");
             Console.ReadLine();
         }
+
+
 
         public static void CadastrarFuncionario()
         {
@@ -202,6 +249,61 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
             f.cargoFuncionario = Console.ReadLine();
             Console.Write("Telefone: ");
             f.telefoneFuncionario = Console.ReadLine();
+
+            
+            DateTime dataAdmissao;
+            while (true)
+            {
+                Console.Write("Data de Admissão (dd/mm/aaaa): ");
+                if (DateTime.TryParse(Console.ReadLine(), out dataAdmissao))
+                {
+                    f.dataAdmissaoFuncionario = dataAdmissao;
+                    break;
+                }
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Formato de data inválido. Tente novamente (Ex: 01/01/2023).");
+                Console.ResetColor();
+            }
+
+          
+            DateTime dataNascimento;
+            while (true)
+            {
+                Console.Write("Data de Nascimento (dd/mm/aaaa): ");
+                if (DateTime.TryParse(Console.ReadLine(), out dataNascimento))
+                {
+                    f.dataNascimentoFuncionario = dataNascimento;
+                    break;
+                }
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Formato de data inválido. Tente novamente (Ex: 01/01/1990).");
+                Console.ResetColor();
+            }
+
+            
+            decimal valorSalario;
+            while (true)
+            {
+                Console.Write("Valor do Salário (Ex: 1500,50): R$ ");
+              
+                if (decimal.TryParse(
+                    Console.ReadLine(),
+                    System.Globalization.NumberStyles.Currency,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    out valorSalario))
+                {
+                    if (valorSalario > 0)
+                    {
+                        f.valorSalarioFuncionario = valorSalario;
+                        break;
+                    }
+                }
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Valor de salário inválido. Use vírgula para decimal (Ex: 1500,50) e digite um valor maior que zero.");
+                Console.ResetColor();
+            }
+
+      
 
 
             f.ID_endereco = novoIdEndereco;
@@ -325,6 +427,64 @@ namespace TrabalhoPOOMaterialDeConstrucaoGustavoSavio
                 else if (!string.IsNullOrWhiteSpace(novoTelefone))
                     f.telefoneFuncionario = novoTelefone;
 
+              
+                Console.Write($"Data de Admissão (Atual: {f.dataAdmissaoFuncionario.ToShortDateString()} - dd/mm/aaaa): ");
+                string novaDataAdmissaoStr = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(novaDataAdmissaoStr))
+                {
+                    if (DateTime.TryParse(novaDataAdmissaoStr, out DateTime novaDataAdmissao))
+                    {
+                        f.dataAdmissaoFuncionario = novaDataAdmissao;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("AVISO: Data de Admissão inválida. O valor atual será mantido.");
+                        Console.ResetColor();
+                    }
+                }
+
+                
+                Console.Write($"Data de Nascimento (Atual: {f.dataNascimentoFuncionario.ToShortDateString()} - dd/mm/aaaa): ");
+                string novaDataNascimentoStr = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(novaDataNascimentoStr))
+                {
+                    if (DateTime.TryParse(novaDataNascimentoStr, out DateTime novaDataNascimento))
+                    {
+                        f.dataNascimentoFuncionario = novaDataNascimento;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("AVISO: Data de Nascimento inválida. O valor atual será mantido.");
+                        Console.ResetColor();
+                    }
+                }
+
+              
+                string salarioAtualFormatado = f.valorSalarioFuncionario.ToString("N2", CultureInfo.InvariantCulture);
+                Console.Write($"Valor do Salário (Atual: R$ {salarioAtualFormatado}): R$ ");
+                string novoSalarioStr = Console.ReadLine();
+
+                if (!string.IsNullOrWhiteSpace(novoSalarioStr))
+                {
+                    if (decimal.TryParse(
+                        novoSalarioStr,
+                        System.Globalization.NumberStyles.Currency,
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        out decimal novoSalario))
+                    {
+                        f.valorSalarioFuncionario = novoSalario;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("AVISO: Salário inválido. O valor atual será mantido.");
+                        Console.ResetColor();
+                    }
+                }
+
+         
 
 
                 if (e != null)
